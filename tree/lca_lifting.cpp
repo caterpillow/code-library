@@ -1,46 +1,45 @@
 #include "../template.h"
 
-struct LCA {
-    int n; 
-    vt<vt<pl>> adj; 
-    vt<vt<int>> par;
-    vt<int> depth;
-    vt<ll> tfx; // treefiu sum
-    void init(int _n) {  n = _n;
-        int d = 1; 
-        while ((1<<d) < n) ++d;
-        par.assign(d, vt<int>(n)); 
+struct BinaryLifting {
+    int n, r; 
+    vt<vt<int>> adj; 
+    vt<int> par, jmp, depth;
+    void init(int _n) {  
+        n = _n;
         adj.resize(n);
-        depth.resize(n);
-        tfx.resize(n);
+        par = jmp = depth = vt<int>(n);
     }
-    void ae(int u, int v, ll w = 1) { adj[u].pb({v, w}), adj[v].pb({u, w}); }
-    void gen(int R = 0) { par[0][R] = R; dfs(R); }
+    void ae(int u, int v, ll w = 1) { adj[u].pb(v), adj[v].pb(u); }
+    void gen(int _r = 0) { r = _r, par[r] = jmp[r] = r; dfs(r); }
     void dfs(int u = 0) {
-        FOR (i, 1, par.size()) par[i][u] = par[i - 1][par[i - 1][u]];
-        for (auto [v, w] : adj[u]) {
-            if (v != par[0][u]) depth[v] = depth[par[0][v] = u] + 1, tfx[v] = tfx[u] + w, dfs(v);
+        for (int v : adj[u]) {
+            depth[v] = depth[u] + 1;
+            par[v] = u;
+            if (depth[jmp[jmp[u]]] + depth[u] == 2 * depth[jmp[u]]) jmp[v] = jmp[jmp[u]];
+            else jmp[v] = u;
+            adj[v].erase(find(all(adj[v]), u));
+            dfs(v);
         }
     }
-    int jmp(int u, int d) {
-        F0R (i, par.size()) if ((d >> i) & 1) u = par[i][u];
-        return u; 
+    int lift(int u, int d) {
+        if (d == 0) return r;
+        while (depth[par[u]] >= d) {
+            if (depth[jmp[u]] >= d) u = jmp[u];
+            else u = par[u];
+        }
+        return u;
     }
     int lca(int u, int v) {
         if (depth[u] < depth[v]) swap(u, v);
-        u = jmp(u, depth[u] - depth[v]); 
+        u = lift(u, depth[v]); 
         if (u == v) return u;
-        ROF (i, 0, par.size()) {
-            int u = par[i][u], v = par[i][v];
-            if (u != v) u = u, v = v;
+        while (u != v) {
+            if (jmp[u] != jmp[v]) u = jmp[u], v = jmp[v];
+            else u = par[u], v = par[v];
         }
-        return par[0][u];
+        return u;
     }
-    int dist(int u, int v) { // # edges on path
+    int dist(int u, int v) { // # of edges on path
         return depth[u] + depth[v] - 2 * depth[lca(u, v)]; 
-    }
-    // onlv if weighted paths
-    ll wdist(int u, int v) { // path sum
-        return tfx[u] + tfx[v] - 2 * tfx[lca(u, v)];
     }
 };
