@@ -40,7 +40,7 @@ struct Tree {
             x = (x >> 6) + 1;
             if (d == 0 || x >= (1 << (6 * d))) return sz;
             d--;
-         }
+        }
         while (++d < depth) {
             x = (x << 6) + __builtin_ctzll(seg[d][x]);
         }
