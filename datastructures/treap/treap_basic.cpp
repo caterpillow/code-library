@@ -148,6 +148,17 @@ int mn(ptr n) {
     else return n->key;
 }
 
+int mx(ptr n) {
+    if (n->r) return mx(n->r);
+    else return n->key;
+}
+
+int ord(ptr n, int k) { // 0-index of k if it was inserted
+    if (!n) return 0;
+    else if (n->key >= k) return ord(n->l, k); // k is on the left
+    else return ord(n->r, k) + sz(n->l) + 1; // k is on the right
+}
+
 ptr unite(ptr l, ptr r) {
     if (!l || !r) return l ? l : r;
     // l has the smallest key
@@ -159,6 +170,17 @@ ptr unite(ptr l, ptr r) {
         tie(l, r) = make_pair(r, rt);
     }   
     return merge(res, l);
+}
+
+// doesnt have the amortized complexity of the other union, 
+// but is fast in practice for general unions
+ptr unite_fast(ptr l, ptr r) {
+    if (!l || !r) return l ? l : r;
+    if (l->pri < r->pri) swap(l, r);
+    auto [lhs, rhs] = split(r, l->key);
+    l->l = unite(l->l, lhs);
+    l->r = unite(l->r, rhs);
+    return pull(l);
 }
 
 void heapify(ptr n) {

@@ -1,4 +1,4 @@
-#include "../template.h"
+#include "../../template.h"
 
 struct DSU {
     vt<int> e; 
