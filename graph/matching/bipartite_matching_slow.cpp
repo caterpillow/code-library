@@ -1,4 +1,4 @@
-#include "../template.h"
+#include "../../template.h"
 
 int a, b; // # of nodes on left/right side respectively
 vt<vt<int>> adj;

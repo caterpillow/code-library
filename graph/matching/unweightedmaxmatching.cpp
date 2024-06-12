@@ -1,4 +1,4 @@
-#include "../template.h"
+#include "../../template.h"
 
 random_device rd;
 mt19937 rng(rd());
@@ -6,47 +6,45 @@ mt19937 rng(rd());
 struct MCM {
     int n, t = 0;
     vt<vt<int>> adj;
-    vt<int> mt, us;
+    vt<int> mate, last_seen;
 
     void init(int _n) {
         n = _n;
         adj.resize(n);
-        mt.resize(n + 1, n);
-        us.resize(n + 1);
+        mate.resize(n + 1, n);
+        last_seen.resize(n + 1);
     }
 
     int dfs(int u) {
-        us[u] = t;
+        last_seen[u] = t;
         shuffle(all(adj[u]), rng);
-        for (int h : adj[u]) {
-            int hm = mt[h];
-            if (us[hm] != t) {
-                mt[u] = h, mt[h] = u, mt[hm] = n;
-                if (hm == n || dfs(hm)) return 1;
-                mt[h] = hm, mt[hm] = h, mt[u] = n;
+        for (int v : adj[u]) {
+            int m = mate[v];
+            if (last_seen[m] != t) {
+                mate[u] = v, mate[v] = u, mate[m] = n;
+                if (m == n || dfs(m)) return 1;
+                mate[v] = m, mate[m] = v, mate[u] = n;
             }
         }
         return 0;
     }
 
-    void ae(int x, int y) {
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+    void ae(int u, int v) {
+        if (u == v) return;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
 
-    const int MAGIC = 10; // make bigger if wa
+    const int MAGIC = 1; // make bigger if wa
     vt<pi> calc() {
-        int ans = 0;
         F0R (bad, MAGIC) {
-            int was = ans;
-            F0R (i, n) {
-                if (mt[i] == n) t++, ans += dfs(i);
-            }
-            if (ans != was) bad = 0;
+            int found = 0;
+            F0R (u, n) if (mate[u] == n) t++, found |= dfs(u);
+            if (found) bad = 0;
         }
         vt<pi> out;
         F0R (i, n) {
-            if (mt[i] < i) out.pb({mt[i], i});
+            if (mate[i] < i) out.pb({mate[i], i});
         }
         return out;
     }
