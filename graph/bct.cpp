@@ -24,7 +24,7 @@ struct BCT {
                 dfs(v);
                 low[u] = min(low[u], low[v]);
                 if (low[v] == tin[u]) {
-                    is_art[u] = (tin[u] > 1 || tin[v] > 2);
+                    is_art[u] = (u != stk[0]) || tin[v] > tin[u] + 1;
                     comps.pb({u});
                     for (int w = -1; w != v;) {
                         comps.back().pb(w = stk.back());
