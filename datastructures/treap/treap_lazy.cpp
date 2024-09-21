@@ -5,9 +5,8 @@ random_device rd;
 mt19937 mt(rd());
 
 struct Lazy {
-    bool rev;
     ll v;
-    bool inc;
+	bool inc, rev;
     void operator+=(const Lazy &b) {
         if (b.inc) v += b.v;
         else v = b.v, inc = false;
@@ -26,8 +25,8 @@ struct Value {
     }
 };
 
-const Lazy LID = {false, 0, true};
-const Value VID = {0, 0};
+const Lazy LID = {0, true, false};
+const Value VID = {INF, 0};
 
 using ptr = struct Node*;
 
@@ -40,12 +39,10 @@ struct Node {
     Value val, agg;
     Lazy lazy;
 
-    Node(K _key, Value _val) {
+    Node(K key, Value val) : key(key), val(val), agg(val) {
         sz = 1;
         pri = mt();
-        key = _key;
         l = r = 0;
-        val = agg = _val;
         lazy = LID;
     }
 

@@ -4,33 +4,26 @@ using K = ll; // key type
 random_device rd;
 mt19937 mt(rd());
 
-ll ID = INF;
-ll cmb(ll a, ll b) {
-    return min(a, b);
-}
+ll ID = 0;
 
 using ptr = struct Node*;
 struct Node {
 	K key;
-	int pri;
-    ptr l, r;
-	int sz; 
+	int pri, sz;
+	ptr l, r;
 
 	// custom
-	ll val;
-	ll agg;
+	ll val, agg;
 
-	Node(K _key, ll _val) {
-        pri = mt(); 
-        sz = 1; 
-        l = r = nullptr;
-        val = agg = _val;
-        key = _key;
+	Node(K key, ll val) : key(key), val(val), agg(val) {
+		pri = mt();
+		sz = 1;
+		l = r = 0;
 	}
 
-	~Node() { 
-        delete l;
-        delete r;
+	~Node() {
+		delete l;
+		delete r;
 	}
 };
 
@@ -39,34 +32,34 @@ ll val(ptr n) { return n ? n->val : ID; }
 ll agg(ptr n) { return n ? n->agg : ID; }
 
 ptr pull(ptr n) {
-    ptr a = n->l, b = n->r;
-    n->sz = sz(a) + 1 + sz(b);
-    n->agg = cmb(agg(a), cmb(n->val, agg(b)));
-    return n;
+	ptr a = n->l, b = n->r;
+	n->sz = sz(a) + 1 + sz(b);
+	n->agg = agg(a) + n->val + agg(b);
+	return n;
 }
 
 pair<ptr, ptr> split(ptr n, K k) { // splits before k
 	if (!n) return {n, n};
-    if (k <= n->key) {
-        auto [l, r] = split(n->l, k); 
-        n->l = r;
-        return {l, pull(n)};
+	if (k <= n->key) {
+		auto [l, r] = split(n->l, k);
+		n->l = r;
+		return {l, pull(n)};
 	} else {
-		auto [l, r] = split(n->r, k); 
-    	n->r = l;
+		auto [l, r] = split(n->r, k);
+		n->r = l;
 		return {pull(n), r};
 	}
 }
 
 pair<ptr, ptr> spliti(ptr n, int i) { // splits before i
 	if (!n) return {n, n};
-    if (i <= sz(n->l)) {
-        auto [l, r] = spliti(n->l, i); 
-        n->l = r;
-        return {l, pull(n)};
-    } else {
-		auto [l, r] = spliti(n->r, i - sz(n->l) - 1); 
-        n->r = l;
+	if (i <= sz(n->l)) {
+		auto [l, r] = spliti(n->l, i);
+		n->l = r;
+		return {l, pull(n)};
+	} else {
+		auto [l, r] = spliti(n->r, i - sz(n->l) - 1);
+		n->r = l;
 		return {pull(n), r};
 	}
 }
@@ -112,7 +105,7 @@ ptr findi(ptr n, int i) {
 }
 
 ll query(ptr &n, K lo, K hi) {
-	auto [lm, r] = split(n, hi + 1); // only works for integer key types 
+	auto [lm, r] = split(n, hi + 1); // only works for integer key types
 	auto [l, m] = split(lm, lo);
 	ll res = agg(m);
 	n = merge(l, merge(m, r));
@@ -136,11 +129,11 @@ void upd(ptr& n, K k, ll nv) { // assumes no duplicate keys
 }
 
 void updi(ptr& n, int i, ll nv) {
-    auto [l, mr] = spliti(n, i);
-    auto [m, r] = spliti(n, 1);
-    assert(m);
-    m->val = m->agg = nv;
-    n = merge(l, merge(m, r));
+	auto [l, mr] = spliti(n, i);
+	auto [m, r] = spliti(n, 1);
+	assert(m);
+	m->val = m->agg = nv;
+	n = merge(l, merge(m, r));
 }
 
 int mn(ptr n) {
