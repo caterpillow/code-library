@@ -1,5 +1,7 @@
 #include "../../template.h"
 
+// might be able to cheese weak tests
+
 random_device rd;
 mt19937 rng(rd());
 
