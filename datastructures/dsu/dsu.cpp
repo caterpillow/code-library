@@ -20,7 +20,7 @@ struct DSU {
     bool sameSet(int a, int b) { 
         return find(a) == find(b); 
     }
-    int size(int x) { 
+    int sz(int x) {
         return -e[find(x)]; 
     }
 };

@@ -1,5 +1,7 @@
 #include "../../template.h"
 
+// O(VE log U)
+
 struct Dinic {
     struct Edge {
         int to, rev;

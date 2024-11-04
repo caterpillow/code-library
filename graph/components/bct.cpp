@@ -1,4 +1,4 @@
-#include "../template.h"
+#include "../../template.h"
 
 struct BCT { 
     int n, t = 0; 

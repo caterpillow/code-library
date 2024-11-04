@@ -20,15 +20,16 @@ struct Node {
     }
 };
 
-const Node NID = {0, 0};
-const Lazy UID = {0, true};
- 
-template<class T, class U, int SZ> struct LazySeg { 
-    vt<T> seg;
-    vt<U> lazy;
+const Node NID = {-INF, 0};
+const Lazy LID = {0, true};
+const int sz = 1 << 17;
+
+struct LazySeg {
+    vt<Node> seg;
+    vt<Lazy> lazy;
     void init() {
-        seg.resize(2 * SZ, NID);
-        lazy.resize(2 * SZ, UID);
+        seg.resize(2 * sz, NID);
+        lazy.resize(2 * sz, LID);
     }
     void pull(int i) {
         seg[i] = seg[2 * i] + seg[2 * i + 1];
@@ -36,12 +37,12 @@ template<class T, class U, int SZ> struct LazySeg {
     void push(int i, int l, int r) {
         seg[i].upd(lazy[i], l, r);
         if (l != r)  F0R (j, 2) lazy[2 * i + j] += lazy[i];
-        lazy[i] = UID;
+        lazy[i] = LID;
     }
     void build() {
-        for (int i = SZ - 1; i > 0; i--) pull(i);
+        for (int i = sz - 1; i > 0; i--) pull(i);
     }
-    void upd(int lo, int hi, U val, int i = 1, int l = 0, int r = SZ - 1) {
+    void upd(int lo, int hi, Lazy val, int i = 1, int l = 0, int r = sz - 1) {
         push(i, l, r);
         if (r < lo || l > hi) return;
         if (lo <= l && r <= hi) {
@@ -54,23 +55,23 @@ template<class T, class U, int SZ> struct LazySeg {
         upd(lo, hi, val, 2 * i + 1, m + 1, r);
         pull(i);
     }
-    T query(int lo = 0, int hi = SZ - 1, int i = 1, int l = 0, int r = SZ - 1) {
+    Node query(int lo = 0, int hi = sz - 1, int i = 1, int l = 0, int r = sz - 1) {
         push(i, l, r);
         if (r < lo || l > hi) return NID;
         if (lo <= l && r <= hi) return seg[i];
         int m = (l + r) / 2;
         return query(lo, hi, 2 * i, l, m) + query(lo, hi, 2 * i + 1, m + 1, r);
     }
-    T& operator[](int i) {
-        return seg[i + SZ];
+    Node& operator[](int i) {
+        return seg[i + sz];
     }
 };
 
-template<class T, class U, int sz, bool in_edges> struct HLD {
+template<bool in_edges> struct HLD {
     vt<int> adj[sz];
     int par[sz], root[sz], depth[sz], size[sz], pos[sz], time;
     vt<int> rpos;
-    LazySeg<T, U, sz> tree;
+    LazySeg tree;
 
     void ae(int u, int v) {
         adj[u].pb(v);
@@ -120,21 +121,18 @@ template<class T, class U, int sz, bool in_edges> struct HLD {
         if (depth[u] > depth[v]) swap(u, v);
         op(pos[u] + in_edges, pos[v]);
     }
-    void modify(int u, int v, U upd) {
+    void modify(int u, int v, Lazy upd) {
         process(u, v, [&] (int l, int r) { tree.upd(l, r, upd); });
     }
-    T query(int u, int v) {
-        T res = NID;
+    Node query(int u, int v) {
+        Node res = NID;
         process(u, v, [&] (int l, int r) { res = res + tree.query(l, r); });
         return res;
     }
-    void modify_subtree(int u, U upd) {
+    void modify_subtree(int u, Lazy upd) {
         tree.upd(pos[u] + in_edges, pos[u] + size[u] - 1, upd);
     }
-    T query_subtree(int u) {
+    Node query_subtree(int u) {
         return tree.query(pos[u] + in_edges, pos[u] + size[u] - 1);
     }
 };
-
-ll n, k;
-HLD<Node, Lazy, 1 << 16, false> hld;

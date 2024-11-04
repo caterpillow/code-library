@@ -1,49 +1,74 @@
 #include "../../template.h"
 
-struct Dinic {
+// O(VE sqrt E)
+
+template<typename flow_t = long long>
+struct PushRelabel {
     struct Edge {
         int to, rev;
-        ll c, oc;
-        ll flow() { return max(oc - c, 0LL); } // if you need flows
+        flow_t f, c;
     };
-    vt<int> lvl, ptr, q;
-    vt<vt<Edge>> adj;
+    vt<vt<Edge> > g;
+    vt<flow_t> ec;
+    vt<Edge*> cur;
+    vt<vt<int> > hs;
+    vt<int> h;
 
     void init(int n) {
-        lvl = ptr = q = vt<int>(n);
-        adj.resize(n);
+        g.resize(n);
+        ec.resize(n);
+        cur.resize(n);
+        hs.resize(2 * n);
+        h.resize(n);
     }
 
-    void ae(int a, int b, ll c, ll rcap = 0) {
-        adj[a].push_back({b, size(adj[b]), c, c});
-        adj[b].push_back({a, size(adj[a]) - 1, rcap, rcap});
+    void ae(int s, int t, flow_t cap, flow_t rcap = 0) {
+        if (s == t) return;
+        Edge a = {t, size(g[t]), 0, cap};
+        Edge b = {s, size(g[s]), 0, rcap};
+        g[s].push_back(a);
+        g[t].push_back(b);
     }
-    ll dfs(int v, int t, ll f) {
-        if (v == t || !f) return f;
-        for (int& i = ptr[v]; i < size(adj[v]); i++) {
-            Edge& e = adj[v][i];
-            if (lvl[e.to] == lvl[v] + 1)
-                if (ll p = dfs(e.to, t, min(f, e.c))) {
-                    e.c -= p, adj[e.to][e.rev].c += p;
-                    return p;
-                }
+    void add_flow(Edge& e, flow_t f) {
+        Edge &back = g[e.to][e.rev];
+        if (!ec[e.to] && f)
+            hs[h[e.to]].push_back(e.to);
+        e.f += f; e.c -= f;
+        ec[e.to] += f;
+        back.f -= f; back.c += f;
+        ec[back.to] -= f;
+    }
+    flow_t calc(int s, int t) {
+        int v = size(g);
+        h[s] = v;
+        ec[t] = 1;
+        vt<int> co(2 * v);
+        co[0] = v - 1;
+        for(int i=0;i<v;++i) cur[i] = g[i].data();
+        for(auto &e:g[s]) add_flow(e, e.c);
+        if(size(hs[0]))
+        for (int hi = 0; hi>=0; ) {
+            int u = hs[hi].back();
+            hs[hi].pop_back();
+            while (ec[u] > 0) // discharge u
+                if (cur[u] == g[u].data() + size(g[u])) {
+                    h[u] = 1e9;
+                    for(auto &e : g[u])
+                        if (e.c && h[u] > h[e.to] + 1)
+                            h[u] = h[e.to] + 1, cur[u] = &e;
+                    if (++co[h[u]], !--co[hi] && hi < v)
+                        for (int i=0; i<v; ++i)
+                            if (hi < h[i] && h[i] < v){
+                                --co[h[i]];
+                                h[i] = v + 1;
+                            }
+                    hi = h[u];
+                } else if (cur[u]->c && h[u] == h[cur[u]->to] + 1)
+                    add_flow(*cur[u], min(ec[u], cur[u]->c));
+                else ++cur[u];
+            while (hi>=0 && hs[hi].empty()) --hi;
         }
-        return 0;
+        return -ec[s];
     }
-    ll calc(int s, int t) {
-        ll flow = 0; q[0] = s;
-        FOR (L, 0, 31) do { // 'int L=30' maybe faster for random data
-            lvl = ptr = vt<int>(size(q));
-            int qi = 0, qe = lvl[s] = 1;
-            while (qi < qe && !lvl[t]) {
-                int v = q[qi++];
-                for (Edge e : adj[v])
-                    if (!lvl[e.to] && e.c >> (30 - L))
-                        q[qe++] = e.to, lvl[e.to] = lvl[v] + 1;
-            }
-            while (ll p = dfs(s, t, LLONG_MAX)) flow += p;
-        } while (lvl[t]);
-        return flow;
-    }
-    bool leftOfMinCut(int a) { return lvl[a] != 0; }
+    bool leftOfMinCut(int a) { return h[a] >= sz(g); }
 };

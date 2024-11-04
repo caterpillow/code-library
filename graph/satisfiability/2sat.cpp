@@ -1,4 +1,4 @@
-#include "../template.h"
+#include "../../template.h"
 
 struct SCC {
     ll n; 
@@ -47,9 +47,9 @@ struct TwoSAT {
     void tie(int x, int y) { implies(x, y), implies(~x, ~y); } // x and y have the same value
     void nand(int x, int y ) { either(~x, ~y); } // x and y are not both true
 	void at_most_one(const vt<int>& li) { // at most one of li is true
-		if (li.size() <= 1) return;
+		if (size(li) <= 1) return;
 		int cur = ~li[0];
-		FOR (i, 2, li.size()) {
+		FOR (i, 2, size(li)) {
 			int next = add();
 			either(cur, ~li[i]); 
             either(cur,next);
