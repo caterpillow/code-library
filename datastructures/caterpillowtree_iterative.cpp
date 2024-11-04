@@ -8,7 +8,7 @@ struct Tree {
     vt<ull> seg[depth];
     
     Tree() {
-        F0R (i, depth) seg[i].resize(1 << (6 * i));
+        FOR (i, depth) seg[i].resize(1 << (6 * i));
     }
 
     void insert(int x) {
@@ -69,7 +69,7 @@ struct Tree {
     int min() {
         if (empty()) return sz;
         int ans = 0;
-        F0R (d, depth) {
+        FOR (d, depth) {
             ans <<= 6;
             ans += __builtin_ctzll(seg[d][ans >> 6]);
         }
@@ -79,7 +79,7 @@ struct Tree {
     int max() {
         if (empty()) return -1;
         int ans = 0;
-        F0R (d, depth) {
+        FOR (d, depth) {
             ans <<= 6;
             ans += 63 - __builtin_clzll(seg[d][ans >> 6]);
         }

@@ -37,13 +37,13 @@ struct MCM {
 
     const int MAGIC = 1; // make bigger if wa
     vt<pi> calc() {
-        F0R (bad, MAGIC) {
+        FOR (bad, MAGIC) {
             int found = 0;
-            F0R (u, n) if (mate[u] == n) t++, found |= dfs(u);
+            FOR (u, n) if (mate[u] == n) t++, found |= dfs(u);
             if (found) bad = 0;
         }
         vt<pi> out;
-        F0R (i, n) {
+        FOR (i, n) {
             if (mate[i] < i) out.pb({mate[i], i});
         }
         return out;

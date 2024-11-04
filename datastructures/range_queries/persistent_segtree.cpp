@@ -11,17 +11,17 @@ struct Node {
         return new Node {min(lc->v, rc->v), lc, rc};
     }
  
-    ptr upd(int i, int nv, int l = 0, int r = sz - 1) {
+    ptr upd(int i, int nv, int l = 0, int r = sz) {
         if (l == r) return new Node {nv};
         int m = (l + r) / 2;
-        if (i <= m) return pull(lc->upd(i, nv, l, m), rc);
-        else return pull(lc, rc->upd(i, nv, m + 1, r));
+        if (i < m) return pull(lc->upd(i, nv, l, m), rc);
+        else return pull(lc, rc->upd(i, nv, m, r));
     }
  
-    int query(int lo, int hi, int l = 0, int r = sz - 1) {
+    int query(int lo, int hi, int l = 0, int r = sz) {
         if (lo > r || hi < l) return 1e9;
         if (lo <= l && r <= hi) return v;
         int m = (l + r) / 2;
-        return min(lc->query(lo, hi, l, m), rc->query(lo, hi, m + 1, r)); 
+        return min(lc->query(lo, hi, l, m), rc->query(lo, hi, m, r)); 
     }
 };

@@ -23,7 +23,7 @@ struct LCA {
         }
     }
     int jmp(int u, int d) {
-        F0R (i, size(par)) if ((d >> i) & 1) u = par[i][u];
+        FOR (i, size(par)) if ((d >> i) & 1) u = par[i][u];
         return u; 
     }
     int lca(int u, int v) {

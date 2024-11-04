@@ -22,7 +22,7 @@ int dfs(int cur) {
 int solve() {
     int flow = 0;
     matched.assign(b, -1);
-    F0R (i, a){
+    FOR (i, a){
         seen.assign(a, false);
         flow += dfs(i);
     }

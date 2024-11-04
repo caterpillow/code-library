@@ -39,11 +39,11 @@ struct BCT {
     void gen(int& n0, vt<vt<int>>& adj0, vt<int>& id) {
         t = 0;
         tin = low = is_art = vt<int>(n);
-        F0R (u, n) if (!tin[u]) dfs(u); 
-        F0R (u, n) if (!size(adj[u])) comps.pb({u});   
+        FOR (u, n) if (!tin[u]) dfs(u); 
+        FOR (u, n) if (!size(adj[u])) comps.pb({u});   
 
         id.resize(n);   
-        F0R (u, n) {
+        FOR (u, n) {
             if (is_art[u]) {
                 id[u] = n0++;
                 adj0.pb({});
@@ -69,7 +69,7 @@ template<class T> struct RMQ {
         dp.resize(32 - __builtin_clz(size(v)), vt<T>(size(v)));
         copy(all(v), begin(dp[0]));
         for (int j = 1; 1 << j <= size(v); ++j) {
-            F0R (i, size(v) - (1 << j) + 1) dp[j][i] = min(dp[j - 1][i], dp[j - 1][i + (1 << (j - 1))]);
+            FOR (i, size(v) - (1 << j) + 1) dp[j][i] = min(dp[j - 1][i], dp[j - 1][i + (1 << (j - 1))]);
         }
     }
     T query(int l, int r) {

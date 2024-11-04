@@ -13,6 +13,6 @@ void dfs(int u) {
 
 void topsort() {
     seen.assign(n, 0);
-    F0R (u, n) dfs(u);
+    FOR (u, n) dfs(u);
     reverse(all(top)); // reverse to make edges point to the right
 }

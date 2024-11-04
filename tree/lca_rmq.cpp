@@ -3,10 +3,10 @@
 template<class T> struct RMQ {
     vt<vt<T>> dp;
     void init(const vt<T>& v) {
-        dp.resize(32 - __builtin_clz(v.size()), vt<T>(v.size()));
+        dp.resize(32 - __builtin_clz(size(v)), vt<T>(size(v)));
         copy(all(v), begin(dp[0]));
-        for (int j = 1; 1 << j <= v.size(); ++j) {
-            F0R (i, v.size() - (1 << j) + 1) dp[j][i] = min(dp[j - 1][i], dp[j - 1][i + (1 << (j - 1))]);
+        for (int j = 1; 1 << j <= size(v); ++j) {
+            FOR (i, size(v) - (1 << j) + 1) dp[j][i] = min(dp[j - 1][i], dp[j - 1][i + (1 << (j - 1))]);
         }
     }
     T query(int l, int r) {
@@ -30,7 +30,7 @@ struct LCA {
         adj[x].pb(y), adj[y].pb(x); 
     }
     void dfs(int x) {
-        pos[x] = tmp.size(); 
+        pos[x] = size(tmp); 
         tmp.pb({depth[x], x}); 
         for(int y : adj[x]) 
             if (y != par[x]) {

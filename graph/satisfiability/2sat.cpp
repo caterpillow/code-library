@@ -23,7 +23,7 @@ struct SCC {
         for (ll y : radj[x]) if (comp[y] == -1) dfs2(y, v); 
     }
     void gen() {
-        F0R (i, n) if (!seen[i]) dfs(i);
+        FOR (i, n) if (!seen[i]) dfs(i);
         reverse(all(todo)); 
         for (ll x : todo) if (comp[x] == -1) dfs2(x, x), comps.pb(x);
     }
@@ -74,7 +74,7 @@ struct TwoSAT {
             if (!tmp[i]) tmp[i] = 1, tmp[scc.comp[i ^ 1]] = -1;
         }
 		vt<bool> ans(n); 
-        F0R (i, n) ans[i] = tmp[scc.comp[2 * i]] == 1;
+        FOR (i, n) ans[i] = tmp[scc.comp[2 * i]] == 1;
 		return ans;
 	}
 };

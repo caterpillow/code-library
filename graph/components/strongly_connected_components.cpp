@@ -23,7 +23,7 @@ struct SCC {
         for (ll y : radj[x]) if (comp[y] == -1) dfs2(y, v); 
     }
     void gen() {
-        F0R (i, n) if (!seen[i]) dfs(i);
+        FOR (i, n) if (!seen[i]) dfs(i);
         reverse(all(todo)); 
         for (ll x : todo) if (comp[x] == -1) dfs2(x, x), comps.pb(x);
     }

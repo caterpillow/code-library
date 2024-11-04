@@ -24,10 +24,10 @@ struct Node {
         // careful about "empty" lazy tags
         if (u.inc) {
             mx += u.v;
-            sum += u.v * (r - l + 1);
+            sum += u.v * (r - l);
         } else {
             mx = u.v;
-            sum = u.v * (r - l + 1);
+            sum = u.v * (r - l);
         } 
     }
 };
@@ -49,7 +49,7 @@ template<class T, class U, int SZ> struct LazySeg {
     }
     void push(int i, int l, int r) {
         seg[i].upd(lazy[i], l, r);
-        if (l != r) {
+        if (r - l > 1) {
             int m = (l + r) / 2;
             lazy[2 * i].prop(lazy[i], l, r, l, m);
             lazy[2 * i + 1].prop(lazy[i], l, r, m + 1, r);

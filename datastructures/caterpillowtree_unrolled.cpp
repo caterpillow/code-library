@@ -8,7 +8,7 @@ struct Tree {
     vt<ull> seg[depth];
 
     Tree() {
-        F0R (i, depth) seg[i].resize(1 << (6 * i));
+        FOR (i, depth) seg[i].resize(1 << (6 * i));
     }
 
     void insert(int x) {

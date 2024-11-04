@@ -13,9 +13,9 @@ template<class T> struct SegTree {
         seg[i += n] = val;
         while (i /= 2) seg[i] = seg[2 * i] + seg[2 * i + 1];
     }
-    T query(int l, int r) { 
+    T query(int l, int r) { // inc exc
         T a = ID, b = ID;
-        for (l += n, r += n + 1; l < r; l /= 2, r /= 2) {
+        for (l += n, r += n; l < r; l /= 2, r /= 2) {
             if (l & 1) a = a + seg[l++];
             if (r & 1) b = seg[--r] + b;
         }

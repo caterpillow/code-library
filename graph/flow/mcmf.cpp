@@ -1,7 +1,5 @@
 #include "../../template.h"
 
-#include <bits/extc++.h>
-
 struct MCMF {
     struct edge {
         int from, to, rev;
@@ -45,7 +43,7 @@ struct MCMF {
                 }
             }
         }
-        F0R (i, N) pi[i] = min(pi[i] + dist[i], INF);
+        FOR (i, N) pi[i] = min(pi[i] + dist[i], INF);
     }
 
     pair<ll, ll> maxflow(int s, int t) {
@@ -61,7 +59,7 @@ struct MCMF {
                 ed[x->to][x->rev].flow -= fl;
             }
         }
-        F0R (i, N) for(edge& e : ed[i]) totcost += e.cost * e.flow;
+        FOR (i, N) for(edge& e : ed[i]) totcost += e.cost * e.flow;
         return {totflow, totcost/2};
     }
 
@@ -70,7 +68,7 @@ struct MCMF {
         fill(all(pi), INF); pi[s] = 0;
         int it = N, ch = 1; ll v;
         while (ch-- && it--)
-            F0R (i, N) if (pi[i] != INF)
+            FOR (i, N) if (pi[i] != INF)
                 for (edge& e : ed[i]) if (e.cap)
                     if ((v = pi[i] + e.cost) < pi[e.to])
                         pi[e.to] = v, ch = 1;

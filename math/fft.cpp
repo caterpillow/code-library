@@ -12,7 +12,7 @@ ll modpow(ll b, ll e) {
 }
 
 void ntt(vt<ll> &a) {
-	int n = a.size(), L = 31 - __builtin_clz(n);
+	int n = size(a), L = 31 - __builtin_clz(n);
 	static vt<ll> rt(2, 1);
 	for (static int k = 2, s = 2; k < n; k *= 2, s++) {
 		rt.resize(n);
@@ -31,7 +31,7 @@ void ntt(vt<ll> &a) {
 }
 vt<ll> conv(const vt<ll> &a, const vt<ll> &b) {
 	if (a.empty() || b.empty()) return {};
-	int s = (int) a.size() + b.size() - 1, B = 32 - __builtin_clz(s),
+	int s = (int) size(a) + size(b) - 1, B = 32 - __builtin_clz(s),
 	    n = 1 << B;
 	int inv = modpow(n, mod - 2);
 	vt<ll> L(a), R(b), out(n);

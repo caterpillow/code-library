@@ -22,12 +22,12 @@ struct CHT {
     // dependent on query
     // compare new line with first, and first with second
     void add(Line l) {
-        while (hull.size() >= 2 && hull[0].inter(l) <= hull[1].inter(hull[0])) hull.pop_front();
+        while (size(hull) >= 2 && hull[0].inter(l) <= hull[1].inter(hull[0])) hull.pop_front();
         hull.push_front(l);
     }
  
     ll query(ll x) {
-        while (hull.size() >= 2 && hull.end()[-1](x) >= hull.end()[-2](x)) hull.pop_back();
+        while (size(hull) >= 2 && hull.end()[-1](x) >= hull.end()[-2](x)) hull.pop_back();
         return hull.back()(x);
     }
 };

@@ -15,7 +15,7 @@ struct BellmanFord {
     }
     bool gen(int s = 0) {
         dist[s] = 0;
-        F0R (i, n) {
+        FOR (i, n) {
             for (auto& a : edges) {
                 if (dist[a.f.f] < INF) {
                     dist[a.f.s] = min(dist[a.f.s], dist[a.f.f] + a.s);

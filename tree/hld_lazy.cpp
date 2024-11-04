@@ -36,7 +36,7 @@ struct LazySeg {
     }
     void push(int i, int l, int r) {
         seg[i].upd(lazy[i], l, r);
-        if (l != r)  F0R (j, 2) lazy[2 * i + j] += lazy[i];
+        if (l != r)  FOR (j, 2) lazy[2 * i + j] += lazy[i];
         lazy[i] = LID;
     }
     void build() {

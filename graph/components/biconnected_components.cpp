@@ -37,7 +37,7 @@ struct BCC {
     void gen() {
         t = 0;
         tin = low = vt<int>(n);
-        F0R (u, n) if (!tin[u]) dfs(u); 
-        F0R (u, n) if (!size(adj[u])) comps.pb({u});   
+        FOR (u, n) if (!tin[u]) dfs(u); 
+        FOR (u, n) if (!size(adj[u])) comps.pb({u});   
     }
 };
