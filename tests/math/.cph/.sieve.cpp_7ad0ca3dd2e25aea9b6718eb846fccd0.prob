@@ -1,0 +1,1 @@
+{"name":"Local: sieve","url":"/home/caterpillow/code-library/tests/math/sieve.cpp","tests":[{"id":1731175819246,"input":"9973 6\n1\n2\n3\n4\n9972\n9973","output":"1229\n0\n1\n1\n0\n0\n1"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/caterpillow/code-library/tests/math/sieve.cpp","group":"local","local":true}

@@ -1,11 +1,13 @@
 #include <bits/extc++.h>
-#include <ext/random>
 
 using namespace std;
+using namespace __gnu_pbds;
 
 // #pragma GCC optimize("O3,unroll-loops")
 // #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 
+const long long mod = 1e9 + 7;
+// const long long mod = 998244353;
 const int precision = 24;
 using db = long double;
 
@@ -23,6 +25,16 @@ using vvl = vt<vt<ll>>;
 using vvb = vt<vt<bool>>;
 using vpi = vt<pi>;
 using vpl = vt<pl>;
+
+struct chash { // large odd number for C
+    const uint64_t C = ll(4e18 * acos(0)) | 71;
+    ll operator()(ll x) const { return __builtin_bswap64(x * C); }
+};
+
+#define gptable gp_hash_table
+template<class K, class V, class hash> gptable<K, V, hash> make_gptable() {
+    return gptable<K, V, hash>({}, {}, {}, {}, {1 << 16});
+}
 
 #define f first
 #define s second
@@ -46,6 +58,7 @@ using vpl = vt<pl>;
 template<class T> int lwb(vt<T>& a, const T& b) { return int(lb(all(a), b) - bg(a)); }
 template<class T> int upb(vt<T>& a, const T& b) { return int(ub(all(a), b) - bg(a)); }
 template<class T> void rem_dup(vt<T>& v) { sort(all(v)); v.erase(unique(all(v)), v.end()); }
+#define contains(a, x) find(all(x), a) == end(x)
 #define cmp(exp) [&] (const auto& x, const auto& y) { return exp; }
 
 #define __NARG__(...)  __NARG_I_(__VA_ARGS__,__RSEQ_N())
@@ -57,10 +70,10 @@ template<class T> void rem_dup(vt<T>& v) { sort(all(v)); v.erase(unique(all(v)),
 #define _VFUNC(name, n) _VFUNC_(name, n)
 #define VFUNC(func, ...) _VFUNC(func, __NARG__(__VA_ARGS__)) (__VA_ARGS__)
 
-#define FOR3(i, a, b) for (int i = (a); i < (b); i++)
 #define FOR2(i, b) for (int i = 0; i < (b); i++)
-#define ROF3(i, a, b) for (int i = (b) - 1; i >= (a); i--)
+#define FOR3(i, a, b) for (int i = (a); i < (b); i++)
 #define ROF2(i, b) for (int i = (b) - 1; i >= 0; i--)
+#define ROF3(i, a, b) for (int i = (b) - 1; i >= (a); i--)
 #define rep(x) FOR (_, x)
 
 #define each2(a, x) for (auto& a : x)
@@ -77,7 +90,6 @@ template<class T> void rem_dup(vt<T>& v) { sort(all(v)); v.erase(unique(all(v)),
 #define enum(...) VFUNC(enum, __VA_ARGS__)
 
 __gnu_cxx::sfmt19937 mt((uint32_t) chrono::steady_clock::now().time_since_epoch().count());
-const ll mod = 1e9 + 7;
 ll mpow(ll x, ll y = mod - 2) {
     ll res = 1;
     for (; y; x = (x * x) % mod, y >>= 1) if (y & 1) res = (res * x) % mod;
@@ -105,6 +117,9 @@ vpi get_valid_adj(int r, int c) {
 
 constexpr int pct(int x) { return __builtin_popcount(x); }
 constexpr int pct(ll x) { return __builtin_popcountll(x); }
+// 2 ^ bits(n) is the largest power of 2 <= n
+constexpr int bits(int x) { return x ? 31 - __builtin_clz(x) : 0; }
+constexpr int bits(ll x) { return x ? 63 - __builtin_clzll(x) : 0; }
 constexpr int p2(int x) { return 1 << x; }
 constexpr int msk2(int x) { return p2(x) - 1; }
 
@@ -261,6 +276,7 @@ typename enable_if<!is_same<T, string>::value, istream&>::type operator>>(istrea
     return os;
 }
 
+void read(char& x) { x = IO::_nc(); }
 template<typename T>
 typename enable_if<is_integral<T>::value>::type read(T& x) { IO::_ri(x); }
 template <typename T>
@@ -272,12 +288,12 @@ template<class T, class = decltype(begin(declval<T>()))>
 typename enable_if<!is_same<T, string>::value>::type read(T& v) { for (auto& i : v) read(i); }
 template<class T, class... Ts> void read(T& t, Ts&... ts) { read(t); read(ts...); }
 
+void _print(const char& c) { IO::_wc(c); }
 template<typename T>
 typename enable_if<is_integral<T>::value>::type _print(T x) { IO::_wi(x); }
 template <typename T>
 typename std::enable_if<std::is_floating_point<T>::value>::type _print(T& x) { IO::_wf(x); }
 void _print(const bool& x) { IO::_wi(x); }
-void _print(const char& c) { IO::_wc(c); }
 void _print(const string& x) { IO::_ws(x); }
 void _print(const char* x) { IO::_ws(x); }
 template<class T, class U>
@@ -314,7 +330,10 @@ char nxtc() { return IO::_nc(); }
 #define rd2(a, b) db a = IO::_nf(); db b = IO::_nf()
 #define rd3(a, b, c) a = IO::_nf(); b = IO::_nf(); c = IO::_nf()
 #define rd4(a, b, c, d) a = IO::_nf(); b = IO::_nf(); c = IO::_nf(), d = IO::_nf()
-#define rc(a) char a = IO::_nc()
+#define rc1(a) char a = IO::_nc()
+#define rc2(a, b) char a = IO::_nc(); char b = IO::_nc()
+#define rc3(a, b, c) char a = IO::_nc(); char b = IO::_nc(); char c = IO::_nc()
+#define rc4(a, b, c, d) char a = IO::_nc(); char b = IO::_nc(); char c = IO::_nc(); char d = IO::_nc()
 #define rs1(a) string a = IO::_ns()
 #define rs2(a, b) string a = IO::_ns(); string b = IO::_ns()
 #define rvi(a, n) vi a(n); FOR (i, n) IO::_ri(a[i])
@@ -326,6 +345,7 @@ char nxtc() { return IO::_nc(); }
 #define rid(...) VFUNC(rid, __VA_ARGS__)
 #define rl(...) VFUNC(rl, __VA_ARGS__)
 #define rd(...) VFUNC(rd, __VA_ARGS__)
+#define rc(...) VFUNC(rc, __VA_ARGS__)
 #define rs(...) VFUNC(rs, __VA_ARGS__)
 
 const int inf = 1e9;
