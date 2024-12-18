@@ -2842,27 +2842,6 @@
             "// https://caterpillow.github.io/byot"
         ]
     },
-    "sparsetable": {
-        "prefix": "sparsetable",
-        "body": [
-            "template<class T> struct RMQ {",
-            "\t#define func min",
-            "\tvt<vt<T>> dp;",
-            "\tvoid init(const vt<T>& v) {",
-            "\t\tdp.resize(32 - __builtin_clz(size(v)), vt<T>(size(v)));",
-            "\t\tcopy(all(v), begin(dp[0]));",
-            "\t\tfor (int j = 1; 1 << j <= size(v); ++j) {",
-            "\t\t\tFOR (i, size(v) - (1 << j) + 1) dp[j][i] = func(dp[j - 1][i], dp[j - 1][i + (1 << (j - 1))]);",
-            "\t\t}",
-            "\t}",
-            "\tT query(int l, int r) {",
-            "\t\tint d = 31 - __builtin_clz(r - l);",
-            "\t\treturn func(dp[d][l], dp[d][r - (1 << d) + 1]); ",
-            "\t}",
-            "\t#undef func",
-            "};"
-        ]
-    },
     "sieve": {
         "prefix": "sieve",
         "body": [
@@ -4527,6 +4506,28 @@
             "\t\tauto [i, n] = _merge_path(root);",
             "\t\tstt_root = i;",
             "\t}",
+            "};"
+        ]
+    },
+    "sparsetable": {
+        "prefix": "sparsetable",
+        "body": [
+            "template<class T> struct RMQ {",
+            "\t#define func min",
+            "\tvt<vt<T>> dp;",
+            "\tvoid init(const vt<T>& v) {",
+            "\t\tdp.resize(32 - __builtin_clz(size(v)), vt<T>(size(v)));",
+            "\t\tcopy(all(v), begin(dp[0]));",
+            "\t\tfor (int j = 1; 1 << j <= size(v); ++j) {",
+            "\t\t\tFOR (i, size(v) - (1 << j) + 1) dp[j][i] = func(dp[j - 1][i], dp[j - 1][i + (1 << (j - 1))]);",
+            "\t\t}",
+            "\t}",
+            "\tT query(int l, int r) {",
+            "\t\tif (r - l + 1) return dp[0][l];",
+            "\t\tint d = 31 - __builtin_clz(r - l);",
+            "\t\treturn func(dp[d][l], dp[d][r - (1 << d)]); ",
+            "\t}",
+            "\t#undef func",
             "};"
         ]
     },

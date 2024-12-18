@@ -11,8 +11,9 @@ template<class T> struct RMQ {
         }
     }
     T query(int l, int r) {
-        int d = 31 - __builtin_clz(r - l + 1);
-        return func(dp[d][l], dp[d][r - (1 << d) + 1]); 
+        if (r - l + 1) return dp[0][l];
+        int d = 31 - __builtin_clz(r - l);
+        return func(dp[d][l], dp[d][r - (1 << d)]); 
     }
     #undef func
 };
