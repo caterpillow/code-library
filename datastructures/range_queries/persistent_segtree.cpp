@@ -19,7 +19,7 @@ struct Node {
     }
  
     int query(int lo, int hi, int l = 0, int r = sz) {
-        if (lo > r || hi < l) return 1e9;
+        if (lo >= r || hi <= l) return 1e9;
         if (lo <= l && r <= hi) return v;
         int m = (l + r) / 2;
         return min(lc->query(lo, hi, l, m), rc->query(lo, hi, m, r)); 
