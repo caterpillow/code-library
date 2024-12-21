@@ -91,7 +91,7 @@
             "#define _VFUNC(name, n) _VFUNC_(name, n)",
             "#define VFUNC(func, ...) _VFUNC(func, __NARG__(__VA_ARGS__)) (__VA_ARGS__)",
             "",
-            "#define FOR1(a) for (int i = _; i < (a); i++)",
+            "#define FOR1(a) for (int _ = 0; _ < (a); _++)",
             "#define FOR2(i, b) for (int i = 0; i < (b); i++)",
             "#define FOR3(i, a, b) for (int i = (a); i < (b); i++)",
             "#define ROF2(i, b) for (int i = (b) - 1; i >= 0; i--)",
@@ -412,19 +412,7 @@
             "",
             "",
             "",
-            "*/",
-            "",
-            "main() {",
-            "\t$0",
-            "}",
-            "",
-            "struct _IO {",
-            "\t_IO() {",
-            "\t\tsetfileaio(\"\");",
-            "\t\tsetfile(\"\");",
-            "\t\tIO::initO();",
-            "\t}",
-            "} static_io;"
+            "*/"
         ]
     },
     "tmpcf": {
@@ -506,7 +494,7 @@
             "#define _VFUNC(name, n) _VFUNC_(name, n)",
             "#define VFUNC(func, ...) _VFUNC(func, __NARG__(__VA_ARGS__)) (__VA_ARGS__)",
             "",
-            "#define FOR1(a) for (int i = _; i < (a); i++)",
+            "#define FOR1(a) for (int _ = 0; _ < (a); _++)",
             "#define FOR2(i, b) for (int i = 0; i < (b); i++)",
             "#define FOR3(i, a, b) for (int i = (a); i < (b); i++)",
             "#define ROF2(i, b) for (int i = (b) - 1; i >= 0; i--)",
