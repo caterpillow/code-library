@@ -23,13 +23,14 @@ struct Node {
 const Lazy LID = {0, true};
 const Node NID = {-INF, 0};
  
-const int sz = 1 << 17;
 struct LazySeg { 
+    int n;
     vt<Node> seg;
     vt<Lazy> lazy;
-    void init() {
-        seg.resize(2 * sz, NID);
-        lazy.resize(2 * sz, LID);
+    void init(int _n) {
+        for (n = 1; n < _n; n *= 2);
+        seg.resize(2 * n, NID);
+        lazy.resize(2 * n, LID);
     }
     void pull(int i) {
         seg[i] = seg[2 * i] + seg[2 * i + 1];
@@ -40,9 +41,11 @@ struct LazySeg {
         lazy[i] = LID;
     }
     void build() {
-        for (int i = sz - 1; i > 0; i--) pull(i);
+        for (int i = n - 1; i > 0; i--) pull(i);
     }
-    void upd(int lo, int hi, Lazy val, int i = 1, int l = 0, int r = sz) {
+    void upd(int lo, int hi, Lazy val) { upd(lo, hi, val, 1, 0, n); }
+    void upd(int lo, int hi, Lazy val, int i, int l, int r) {
+        if (r == -1) r = n;
         push(i, l, r);
         if (r <= lo || l >= hi) return;
         if (lo <= l && r <= hi) {
@@ -55,7 +58,9 @@ struct LazySeg {
         upd(lo, hi, val, 2 * i + 1, m, r);
         pull(i);
     }
-    Node query(int lo = 0, int hi = sz, int i = 1, int l = 0, int r = sz) {
+    Node query() { return query(0, n, 1, 0, n); }
+    Node query(int lo, int hi) { return query(lo, hi, 1, 0, n); }
+    Node query(int lo, int hi, int i, int l, int r) {
         push(i, l, r);
         if (r <= lo || l >= hi) return NID;
         if (lo <= l && r <= hi) return seg[i];
@@ -63,6 +68,6 @@ struct LazySeg {
         return query(lo, hi, 2 * i, l, m) + query(lo, hi, 2 * i + 1, m, r);
     }
     Node& operator[](int i) {
-        return seg[i + sz];
+        return seg[i + n];
     }
 };

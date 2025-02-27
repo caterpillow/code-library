@@ -16,35 +16,38 @@ struct Node {
     }
     void upd(const Lazy &u, int l, int r) {
         if (!u.inc) mx = sum = 0;
-        mx += u.v, sum += u.v * (r - l + 1);
+        mx += u.v, sum += u.v * (r - l);
     }
 };
 
-const Node NID = {-INF, 0};
 const Lazy LID = {0, true};
-const int sz = 1 << 17;
-
-struct LazySeg {
+const Node NID = {-INF, 0};
+ 
+struct LazySeg { 
+    int n;
     vt<Node> seg;
     vt<Lazy> lazy;
-    void init() {
-        seg.resize(2 * sz, NID);
-        lazy.resize(2 * sz, LID);
+    void init(int _n) {
+        for (n = 1; n < _n; n *= 2);
+        seg.resize(2 * n, NID);
+        lazy.resize(2 * n, LID);
     }
     void pull(int i) {
         seg[i] = seg[2 * i] + seg[2 * i + 1];
     }
     void push(int i, int l, int r) {
         seg[i].upd(lazy[i], l, r);
-        if (l != r)  FOR (j, 2) lazy[2 * i + j] += lazy[i];
+        if (r - l > 1) FOR (j, 2) lazy[2 * i + j] += lazy[i];
         lazy[i] = LID;
     }
     void build() {
-        for (int i = sz - 1; i > 0; i--) pull(i);
+        for (int i = n - 1; i > 0; i--) pull(i);
     }
-    void upd(int lo, int hi, Lazy val, int i = 1, int l = 0, int r = sz - 1) {
+    void upd(int lo, int hi, Lazy val) { upd(lo, hi, val, 1, 0, n); }
+    void upd(int lo, int hi, Lazy val, int i, int l, int r) {
+        if (r == -1) r = n;
         push(i, l, r);
-        if (r < lo || l > hi) return;
+        if (r <= lo || l >= hi) return;
         if (lo <= l && r <= hi) {
             lazy[i] += val;
             push(i, l, r);
@@ -52,56 +55,64 @@ struct LazySeg {
         }
         int m = (l + r) / 2;
         upd(lo, hi, val, 2 * i, l, m);
-        upd(lo, hi, val, 2 * i + 1, m + 1, r);
+        upd(lo, hi, val, 2 * i + 1, m, r);
         pull(i);
     }
-    Node query(int lo = 0, int hi = sz - 1, int i = 1, int l = 0, int r = sz - 1) {
+    Node query() { return query(0, n, 1, 0, n); }
+    Node query(int lo, int hi) { return query(lo, hi, 1, 0, n); }
+    Node query(int lo, int hi, int i, int l, int r) {
         push(i, l, r);
-        if (r < lo || l > hi) return NID;
+        if (r <= lo || l >= hi) return NID;
         if (lo <= l && r <= hi) return seg[i];
         int m = (l + r) / 2;
-        return query(lo, hi, 2 * i, l, m) + query(lo, hi, 2 * i + 1, m + 1, r);
+        return query(lo, hi, 2 * i, l, m) + query(lo, hi, 2 * i + 1, m, r);
     }
     Node& operator[](int i) {
-        return seg[i + sz];
+        return seg[i + n];
     }
 };
 
-template<bool in_edges> struct HLD {
-    vt<int> adj[sz];
-    int par[sz], root[sz], depth[sz], size[sz], pos[sz], time;
-    vt<int> rpos;
+template<bool in_edges> struct HLD { 
+    int n, time;
+    vt<vt<int>> adj;
+    vt<int> par, root, depth, sz, pos;
     LazySeg tree;
-
     void ae(int u, int v) {
         adj[u].pb(v);
         adj[v].pb(u);
     }
     void dfs_sz(int u) {
-        size[u] = 1;
+        sz[u] = 1;
         for (int& v : adj[u]) {
             par[v] = u;
             depth[v] = depth[u] + 1;
             adj[v].erase(find(all(adj[v]), u));
             dfs_sz(v);
-            size[u] += size[v];
-            if (size[v] > size[adj[u][0]]) swap(v, adj[u][0]);
+            sz[u] += sz[v];
+            if (sz[v] > sz[adj[u][0]]) swap(v, adj[u][0]);
         }
     }
     void dfs_hld(int u) {
         pos[u] = time++;
-        rpos.pb(u);
         for (int& v : adj[u]) {
             root[v] = (v == adj[u][0] ? root[u] : v);
             dfs_hld(v);
         }
     }
-    void init(int r = 0) {
+    void init(int _n) {
+        n = _n;
+        int tsz;
+        for (tsz = 1; tsz < n; tsz *= 2);
+        tree.init(tsz);
+        adj.resize(n);
+        par = root = depth = sz = pos = vt<int>(n);
+    }
+    void gen(int r = 0) {
         par[r] = depth[r] = time = 0;
         dfs_sz(r);
         root[r] = r;
         dfs_hld(r);
-        tree.init();
+        tree.init(n);
     }
     int lca(int u, int v) {
         while (root[u] != root[v]) {
@@ -115,13 +126,13 @@ template<bool in_edges> struct HLD {
     void process(int u, int v, Op op) {
         while (root[u] != root[v]) {
             if (depth[root[u]] > depth[root[v]]) swap(u, v);
-            op(pos[root[v]], pos[v]);
+            op(pos[root[v]], pos[v] + 1);
             v = par[root[v]];
         }
         if (depth[u] > depth[v]) swap(u, v);
-        op(pos[u] + in_edges, pos[v]);
+        op(pos[u] + in_edges, pos[v] + 1);
     }
-    void modify(int u, int v, Lazy upd) {
+    void upd(int u, int v, Lazy upd) {
         process(u, v, [&] (int l, int r) { tree.upd(l, r, upd); });
     }
     Node query(int u, int v) {
@@ -129,10 +140,10 @@ template<bool in_edges> struct HLD {
         process(u, v, [&] (int l, int r) { res = res + tree.query(l, r); });
         return res;
     }
-    void modify_subtree(int u, Lazy upd) {
-        tree.upd(pos[u] + in_edges, pos[u] + size[u] - 1, upd);
+    void upd_subtree(int u, Lazy upd) {
+        tree.upd(pos[u] + in_edges, pos[u] + sz[u], upd);
     }
     Node query_subtree(int u) {
-        return tree.query(pos[u] + in_edges, pos[u] + size[u] - 1);
+        return tree.query(pos[u] + in_edges, pos[u] + sz[u]);
     }
 };

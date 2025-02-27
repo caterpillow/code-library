@@ -1,3 +1,5 @@
+// ancient template (basically useless)
+
 #include "../../template.h"
 
 struct Update {
