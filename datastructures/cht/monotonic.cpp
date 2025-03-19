@@ -16,11 +16,12 @@ struct Line {
 };
  
 struct CHT {
-		// always draw out the hull on paper just to be safe
+	// always draw out the hull on paper just to be safe
     deque<Line> hull;
  
     // dependent on query
     // compare new line with first, and first with second
+    // if slopes can be equal, just add an extra if
     void add(Line l) {
         while (size(hull) >= 2 && hull[0].inter(l) <= hull[1].inter(hull[0])) hull.pop_front();
         hull.push_front(l);
