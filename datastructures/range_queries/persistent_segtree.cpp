@@ -4,11 +4,13 @@ using ptr = struct Node*;
 const int sz = 1 << 18;
  
 struct Node {
+    #define func(a, b) min(a, b)
+    #define ID inf
     int v;
     ptr lc, rc;
  
     ptr pull(ptr lc, ptr rc) {
-        return new Node {min(lc->v, rc->v), lc, rc};
+        return new Node {func(lc->v, rc->v), lc, rc};
     }
  
     ptr upd(int i, int nv, int l = 0, int r = sz) {
@@ -19,9 +21,11 @@ struct Node {
     }
  
     int query(int lo, int hi, int l = 0, int r = sz) {
-        if (lo >= r || hi <= l) return 1e9;
+        if (lo >= r || hi <= l) return ID;
         if (lo <= l && r <= hi) return v;
         int m = (l + r) / 2;
-        return min(lc->query(lo, hi, l, m), rc->query(lo, hi, m, r)); 
+        return func(lc->query(lo, hi, l, m), rc->query(lo, hi, m, r)); 
     }
+    #undef id
+    #undef func
 };
