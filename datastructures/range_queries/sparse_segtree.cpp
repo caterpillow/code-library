@@ -16,7 +16,7 @@ struct Node {
     }
 
     int upd(int i, int nval, int l = 0, int r = sz) {
-        if (l == r) return val = nval;
+        if (r - l == 1) return val = nval;
         int m = (l + r) / 2;
         if (i < m) get(lc)->upd(i, nval, l, m);
         else get(rc)->upd(i, nval, m, r);

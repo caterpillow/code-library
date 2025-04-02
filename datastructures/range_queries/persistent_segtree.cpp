@@ -12,7 +12,7 @@ struct Node {
     }
  
     ptr upd(int i, int nv, int l = 0, int r = sz) {
-        if (l == r) return new Node {nv};
+        if (r - l == 1) return new Node {nv};
         int m = (l + r) / 2;
         if (i < m) return pull(lc->upd(i, nv, l, m), rc);
         else return pull(lc, rc->upd(i, nv, m, r));
