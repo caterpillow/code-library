@@ -43,3 +43,4 @@ struct BinaryLifting {
         return depth[u] + depth[v] - 2 * depth[lca(u, v)]; 
     }
 };
+

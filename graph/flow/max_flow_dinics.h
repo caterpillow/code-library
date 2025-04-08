@@ -1,7 +1,7 @@
 #include "../../template.h"
 
 // O(VE log U)
-
+// U is the max capacity of any edge
 struct Dinic {
     struct Edge {
         int to, rev;

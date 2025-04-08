@@ -2,8 +2,8 @@
 
 template<class T> struct RangeQuery {
     #define comb(a, b) (a) + (b)
+    #define id 0
     int lg, n;
-    T id; // identity element
     vt<vt<T>> stor;
     vt<T> a;
     void fill(int l, int r, int ind) {
@@ -17,8 +17,8 @@ template<class T> struct RangeQuery {
         fill(m, r, ind - 1);
     }
     template <typename It>
-    void build(It l, It r, T _id) {
-        lg = 1, id = _id;
+    void build(It l, It r) {
+        lg = 1;
         while ((1 << lg) < r - l) lg++;
         n = 1 << lg;
         a.resize(n, id);
@@ -31,5 +31,6 @@ template<class T> struct RangeQuery {
         int t = 31 - __builtin_clz(r ^ l);
         return comb(stor[l][t], stor[r][t]);
     }
+    #undef id
     #undef comb
 };

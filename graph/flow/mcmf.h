@@ -1,5 +1,7 @@
 #include "../../template.h"
 
+// O(FE logV)
+// O(VE) for setpi
 struct MCMF {
     struct edge {
         int from, to, rev;

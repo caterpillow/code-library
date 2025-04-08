@@ -5,11 +5,11 @@ struct DSU {
     void init(int n) { 
         e.resize(n, -1);
     }
-    int find(int x) { 
-        return e[x] < 0 ? x : e[x] = find(e[x]); 
+    int operator[](int x) { 
+        return e[x] < 0 ? x : e[x] = (*this)[e[x]]; 
     }   
-    bool unite(int x, int y) {
-        x = find(x), y = find(y); 
+    bool operator()(int x, int y) {
+        x = (*this)[x], y = (*this)[y]; 
         if (x == y) return 0;
         if (e[x] > e[y]) swap(x,y);
         e[x] += e[y]; 
@@ -17,10 +17,7 @@ struct DSU {
         return 1;
     }
     // optional
-    bool sameSet(int a, int b) { 
-        return find(a) == find(b); 
-    }
-    int sz(int x) {
-        return -e[find(x)]; 
-    }
+    bool same_set(int a, int b) { return (*this)[a] == (*this)[b]; }
+    int sz(int x) { return -e[(*this)[x]]; }
+    int add() { e.pb(-1); return size(e) - 1; }
 };

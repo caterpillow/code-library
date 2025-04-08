@@ -13,7 +13,7 @@ struct SegTree {
         return sum;
     }
     void upd(int l, int r, int v) {
-        for (l += n, r += n + 1; l < r; l /= 2, r /= 2) {
+        for (l += n, r += n; l < r; l /= 2, r /= 2) {
             if (l & 1) seg[l++] += v;
             if (r & 1) seg[--r] += v;
         }
@@ -21,12 +21,11 @@ struct SegTree {
 };
 
 template<bool in_edges> struct HLD {
-    int sz;
+    int n;
     vt<vt<int>> adj;
     vt<int> par, root, depth, size, pos;
     int time;
     SegTree tree;
-
     void ae(int u, int v) {
         adj[u].pb(v);
         adj[v].pb(u);
@@ -49,17 +48,17 @@ template<bool in_edges> struct HLD {
             dfs_hld(v);
         }
     }
-    void init(int _sz) {
-        sz = _sz;
-        adj.resize(sz);
-        par = root = depth = size = pos = vt<int>(sz);
+    void init(int _n) {
+        n = _n;
+        adj.resize(n);
+        par = root = depth = size = pos = vt<int>(n);
     }
     void gen(int r = 0) {
         par[r] = depth[r] = time = 0;
         dfs_sz(r);
         root[r] = r;
         dfs_hld(r);
-        tree.init(sz);
+        tree.init(n);
     }
     int lca(int u, int v) {
         while (root[u] != root[v]) {
@@ -68,18 +67,17 @@ template<bool in_edges> struct HLD {
         }
         return depth[u] < depth[v] ? u : v;
     }
-
     template <class Op>
     void process(int u, int v, Op op) {
         while (root[u] != root[v]) {
             if (depth[root[u]] > depth[root[v]]) swap(u, v);
-            op(pos[root[v]], pos[v]);
+            op(pos[root[v]], pos[v] + 1);
             v = par[root[v]];
         }
         if (depth[u] > depth[v]) swap(u, v);
-        op(pos[u] + in_edges, pos[v]);
+        op(pos[u] + in_edges, pos[v] + 1);
     }
-    void modify(int u, int v, ll upd) {
+    void upd(int u, int v, ll upd) {
         process(u, v, [&] (int l, int r) { tree.upd(l, r, upd); });
     }
     ll query(int u, int v) {
