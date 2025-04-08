@@ -14,7 +14,8 @@ struct Sieve {
     }
     void get_prime_fact(int x, vpi& out) {
         if (x == 1) return;
-        if (out.empty() || out.back().f != lp[x]) out.eb(x, 1);
+        if (out.empty() || out.back().f != lp[x]) 
+            out.eb(x, 1);
         else out.back().s++;
     }
 };

@@ -31,13 +31,14 @@ void ntt(vt<ll> &a) {
 }
 vt<ll> conv(const vt<ll> &a, const vt<ll> &b) {
 	if (a.empty() || b.empty()) return {};
-	int s = (int) size(a) + size(b) - 1, B = 32 - __builtin_clz(s),
-	    n = 1 << B;
+	int s = (int) size(a) + size(b) - 1, 
+		B = 32 - __builtin_clz(s), n = 1 << B;
 	int inv = modpow(n, mod - 2);
 	vt<ll> L(a), R(b), out(n);
 	L.resize(n), R.resize(n);
 	ntt(L), ntt(R);
-	FOR (i, 0, n) out[-i & (n - 1)] = (ll)L[i] * R[i] % mod * inv % mod;
+	FOR (i, 0, n) out[-i & (n - 1)] 
+		= (ll) L[i] * R[i] % mod * inv % mod;
 	ntt(out);
 	return {out.begin(), out.begin() + s};
 }

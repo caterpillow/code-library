@@ -17,7 +17,9 @@ struct DSU {
         return 1;
     }
     // optional
-    bool same_set(int a, int b) { return (*this)[a] == (*this)[b]; }
+    bool same_set(int a, int b) { 
+        return (*this)[a] == (*this)[b]; 
+    }
     int sz(int x) { return -e[(*this)[x]]; }
     int add() { e.pb(-1); return size(e) - 1; }
 };

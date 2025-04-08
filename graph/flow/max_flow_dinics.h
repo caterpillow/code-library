@@ -34,7 +34,7 @@ struct Dinic {
     }
     ll calc(int s, int t) {
         ll flow = 0; q[0] = s;
-        FOR (L, 0, 31) do { // 'int L=30' maybe faster for random data
+        FOR (L, 0, 31) do { 
             lvl = ptr = vt<int>(size(q));
             int qi = 0, qe = lvl[s] = 1;
             while (qi < qe && !lvl[t]) {

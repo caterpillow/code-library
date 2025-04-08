@@ -17,8 +17,10 @@ struct MCMF {
 
     void ae(int from, int to, ll cap, ll cost) {
         if (from == to) return;
-        ed[from].push_back(edge{ from, to, size(ed[to]), cap,cost,  0 });
-        ed[to].push_back(edge{ to,  from, size(ed[from]) - 1,  0, -cost, 0 });
+        ed[from].push_back(edge{ from, to, size(ed[to]), 
+            cap,cost,  0 });
+        ed[to].push_back(edge{ to,  from, size(ed[from]) - 1,  
+            0, -cost, 0 });
     }
 
     void path(int s) {

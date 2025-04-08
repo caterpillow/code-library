@@ -65,7 +65,8 @@ struct LazySeg {
         if (r <= lo || l >= hi) return NID;
         if (lo <= l && r <= hi) return seg[i];
         int m = (l + r) / 2;
-        return query(lo, hi, 2 * i, l, m) + query(lo, hi, 2 * i + 1, m, r);
+        return query(lo, hi, 2 * i, l, m) 
+            + query(lo, hi, 2 * i + 1, m, r);
     }
     Node& operator[](int i) {
         return seg[i + n];

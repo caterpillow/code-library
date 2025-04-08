@@ -10,7 +10,8 @@ mat make_id(int n) {
 mat operator*(const mat& a, const mat& b) {
     int x = size(a), y = size(a[0]), z = size(b[0]); 
     mat c = make_mat(x, z);
-    FOR(i, x) FOR(j, y) FOR(k, z) c[i][k] = (c[i][k] + a[i][j] * b[j][k]) % mod;
+    FOR(i, x) FOR(j, y) FOR(k, z) 
+        c[i][k] = (c[i][k] + a[i][j] * b[j][k]) % mod;
     return c;
 }
 mat& operator*=(mat& a, const mat& b) { return a = a * b; }

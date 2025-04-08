@@ -14,5 +14,6 @@ void apsp(vt<vt<ll>> &m) {
 
 // for validated input (no neg cycles, etc, m[i][i] = 0)
 void apsp(vt<vt<ll>>& m) {
-    FOR (k, n) FOR (i, n) FOR (j, n) m[i][j] = min(m[i][j], m[i][k] + m[k][j]);
+    FOR (k, n) FOR (i, n) FOR (j, n) 
+        m[i][j] = min(m[i][j], m[i][k] + m[k][j]);
 }

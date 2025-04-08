@@ -10,12 +10,21 @@ struct TwoSAT {
         y = max(2 * y, -1 - 2 * y); // ~(2 * y)
         edges.pb({x, y}); 
     }
-    void implies(int x, int y) { either(~x, y); } // x -> y
+    // x -> y
+    void implies(int x, int y) { either(~x, y); } 
     void force(int x) { either(x, x); } // x = true
-    void exactly_one(int x, int y) { either(x, y), either(~x, ~y); } // xor
-    void tie(int x, int y) { implies(x, y), implies(~x, ~y); } // x and y have the same value
-    void nand(int x, int y ) { either(~x, ~y); } // x and y are not both true
-    void at_most_one(const vt<int>& li) { // at most one of li is true
+    // xor
+    void exactly_one(int x, int y) { 
+        either(x, y), either(~x, ~y); 
+    }
+    // x and y have the same value
+    void tie(int x, int y) { 
+        implies(x, y), implies(~x, ~y); 
+    } 
+    // x and y are not both true
+    void nand(int x, int y ) { either(~x, ~y); } 
+    // at most one of li is true
+    void at_most_one(const vt<int>& li) { 
         if (size(li) <= 1) return;
         int cur = ~li[0];
         FOR (i, 2, size(li)) {

@@ -18,12 +18,14 @@ struct BellmanFord {
         FOR (i, n) {
             for (auto& a : edges) {
                 if (dist[a.f.f] < INF) {
-                    dist[a.f.s] = min(dist[a.f.s], dist[a.f.f] + a.s);
+                    dist[a.f.s] = min(dist[a.f.s], 
+                        dist[a.f.f] + a.s);
                 }
             }
         }
         for (auto& a : edges) {
-            if (dist[a.f.f] < INF && dist[a.f.s] > dist[a.f.f] + a.s) {
+            if (dist[a.f.f] < INF && dist[a.f.s] 
+                > dist[a.f.f] + a.s) {
                 return true;
             }
         }

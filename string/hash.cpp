@@ -1,6 +1,7 @@
 #include "../template.h"
 
-// skip the stuff that starts with r if you dont care about reverse functions
+// skip the stuff that starts with r 
+// if you dont care about reverse functions
 struct H {
     ull x; H(ull x = 0) : x(x) {}
     H operator+(H o) { return x + o.x + (x + o.x < x); }
@@ -28,7 +29,7 @@ struct HashInterval {
     H hash_interval(int a, int b) { // hash [a, b)
         return ha[b] - ha[a] * pw[b - a];
     }
-    H rhash_interval(int a, int b) { // hash [a, b) but from right to left
+    H rhash_interval(int a, int b) { // hash [a, b) from right to left
         return rha[a] - rha[b] * pw[b - a];
     }
 };
@@ -41,10 +42,15 @@ vector<H> get_hashes(T& str, int length) {
     FOR (i, length) h = h * C + str[i] + 1, pw = pw * C;
     vector<H> ret = {h};
     FOR (i, length, size(str)) {
-        ret.push_back(h = h * C + str[i] + 1 - pw * (str[i - length] + 1));
+        ret.push_back(h = h * C + str[i] + 1 
+            - pw * (str[i - length] + 1));
     }
     return ret;
 }
 
 template<class T>
-H hash_string(T& s) { H h = 1; for (auto c : s) h = h * C + c + 1; return h; }
+H hash_string(T& s) { 
+    H h = 1; 
+    for (auto c : s) h = h * C + c + 1; 
+    return h; 
+}

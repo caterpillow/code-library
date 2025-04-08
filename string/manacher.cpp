@@ -1,7 +1,9 @@
 #include "../template.h"
 
-// res[0][i] = half length of longest even palindrome around pos i (n + 1 elements) 
-// res[1][i] = half length of longest odd palindrome around index i rounded down (n elements)
+// res[0][i] = half length of longest even palindrome 
+// around pos i (n + 1 elements) 
+// res[1][i] = half length of longest odd palindrome 
+// around index i rounded down (n elements)
 template<class T>
 array<vi, 2> manacher(const T& s) {
     int n = size(s);

@@ -39,7 +39,10 @@ struct Node {
 
     void push(ll l, ll r) {
         val.upd(lazy, l, r);
-        if (r - l > 1) get(lc)->lazy += lazy, get(rc)->lazy += lazy;
+        if (r - l > 1) {
+            get(lc)->lazy += lazy; 
+            get(rc)->lazy += lazy;
+        }
         lazy = lid;
     }
 
@@ -48,7 +51,8 @@ struct Node {
         if (lo >= r || hi <= l) return vid;
         if (lo <= l && r <= hi) return val;
         ll m = (l + r) / 2;
-        return get(lc)->query(lo, hi, l, m) + get(rc)->query(lo, hi, m, r);
+        return get(lc)->query(lo, hi, l, m) 
+            + get(rc)->query(lo, hi, m, r);
     }
 
     void upd(ll lo, ll hi, Lazy v, ll l = 0, ll r = sz) {

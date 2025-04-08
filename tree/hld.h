@@ -78,11 +78,15 @@ template<bool in_edges> struct HLD {
         op(pos[u] + in_edges, pos[v] + 1);
     }
     void upd(int u, int v, ll upd) {
-        process(u, v, [&] (int l, int r) { tree.upd(l, r, upd); });
+        process(u, v, [&] (int l, int r) { 
+            tree.upd(l, r, upd); 
+        });
     }
     ll query(int u, int v) {
         ll res = 0;
-        process(u, v, [&] (int l, int r) { res = res + tree.query(l, r); });
+        process(u, v, [&] (int l, int r) { 
+            res = res + tree.query(l, r); 
+        });
         return res;
     }
 };

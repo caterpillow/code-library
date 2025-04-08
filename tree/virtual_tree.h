@@ -1,7 +1,8 @@
 #include "../template.h"
 
 // pos is dfs time
-vt<pl> virtual_tree(vt<ll>& nodes) { // pairs of {ancestor, child}
+// pairs of {ancestor, child}
+vt<pl> virtual_tree(vt<ll>& nodes) { 
     auto cmp = [&] (ll u, ll v) { return pos[u] < pos[v]; };
     sort(all(nodes), cmp);
     int sz = size(nodes);
@@ -9,6 +10,7 @@ vt<pl> virtual_tree(vt<ll>& nodes) { // pairs of {ancestor, child}
     sort(all(nodes), cmp);
     nodes.erase(unique(all(nodes)), nodes.end());
     vt<pl> res;
-    FOR (i, (int) size(nodes) - 1) res.pb({lca(nodes[i], nodes[i + 1]), nodes[i + 1]});
+    FOR (i, (int) size(nodes) - 1) 
+    res.pb({lca(nodes[i], nodes[i + 1]), nodes[i + 1]});
     return res;
 }
