@@ -1,6 +1,6 @@
 #include "point.h"
 
-vt<P> convexHull(vt<P> pts) {
+vt<P> convex_hull(vt<P> pts) {
     if (size(pts) <= 1) return pts;
     sort(all(pts));
     vector<P> h(size(pts)+1);
