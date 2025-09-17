@@ -4,20 +4,32 @@
         "body": [
             "import subprocess",
             "",
-            "name = \"$0\"",
+            "name = \"j\"",
             "",
             "for i in range(1, 10000):",
-            "\tif i % 100 == 0:",
+            "\tif i < 10 or i % 100 == 0:",
             "\t\tprint(i)",
             "\tsubprocess.call(\"./gen > in\", shell = True)",
             "\tr1 = subprocess.check_output(f\"./{name} < in\", shell = True).decode().strip()",
             "\tr2 = subprocess.check_output(f\"./{name}brute < in\", shell = True).decode().strip()",
             "\tif r1 != r2:",
-            "\t\tprint(\"found breaking after\", i, \"iterations\")",
-            "\t\tprint(r1)",
+            "\t\tprint(\"\\033[91mfound breaking after\", i, \"iteration(s)\")",
+            "\t\tprint(\"\\033[91mexpected:\\033[0m\")",
             "\t\tprint(r2)",
+            "\t\tprint(\"\\033[91mreceived\\033[0m\")",
+            "\t\tprint(r1)",
             "\t\tbreak",
             ""
+        ]
+    },
+    "tmpcf": {
+        "prefix": "tmpcf",
+        "body": [
+            "def solve():",
+            "\t$0",
+            "",
+            "for _ in range(int(input())):",
+            "\tsolve()"
         ]
     },
     "test": {

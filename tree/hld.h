@@ -23,7 +23,7 @@ struct SegTree {
 template<bool in_edges> struct HLD {
     int n;
     vt<vt<int>> adj;
-    vt<int> par, root, depth, size, pos;
+    vt<int> par, root, depth, sz, pos;
     int time;
     SegTree tree;
     void ae(int u, int v) {
@@ -31,14 +31,14 @@ template<bool in_edges> struct HLD {
         adj[v].pb(u);
     }
     void dfs_sz(int u) {
-        size[u] = 1;
+        sz[u] = 1;
         for (int& v : adj[u]) {
             par[v] = u;
             depth[v] = depth[u] + 1;
             adj[v].erase(find(all(adj[v]), u));
             dfs_sz(v);
-            size[u] += size[v];
-            if (size[v] > size[adj[u][0]]) swap(v, adj[u][0]);
+            sz[u] += sz[v];
+            if (sz[v] > sz[adj[u][0]]) swap(v, adj[u][0]);
         }
     }
     void dfs_hld(int u) {
@@ -51,7 +51,7 @@ template<bool in_edges> struct HLD {
     void init(int _n) {
         n = _n;
         adj.resize(n);
-        par = root = depth = size = pos = vt<int>(n);
+        par = root = depth = sz = pos = vt<int>(n);
     }
     void gen(int r = 0) {
         par[r] = depth[r] = time = 0;
@@ -69,12 +69,11 @@ template<bool in_edges> struct HLD {
     }
     template <class Op>
     void process(int u, int v, Op op) {
-        while (root[u] != root[v]) {
-            if (depth[root[u]] > depth[root[v]]) swap(u, v);
+        for (;; v = par[root[v]]) {
+            if (pos[u] > pos[v]) swap(u, v);
+            if (root[u] == root[v]) break;
             op(pos[root[v]], pos[v] + 1);
-            v = par[root[v]];
         }
-        if (depth[u] > depth[v]) swap(u, v);
         op(pos[u] + in_edges, pos[v] + 1);
     }
     void upd(int u, int v, ll upd) {
